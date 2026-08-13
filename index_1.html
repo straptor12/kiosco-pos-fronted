@@ -1,0 +1,932 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg:#0C0B09;
+    --surface:#171410;
+    --surface-2:#1F1B15;
+    --surface-hover:#28231A;
+    --line:#332C21;
+    --line-soft:#221E17;
+    --text:#F1EBDD;
+    --text-dim:#C7BCA6;
+    --muted:#8A8071;
+    --accent:#CBAD7C;
+    --accent-hover:#DBC194;
+    --accent-ink:#1B1710;
+    --success:#8CA07A;
+    --success-bg:rgba(140,160,122,0.14);
+    --danger:#BE6C58;
+    --danger-bg:rgba(190,108,88,0.16);
+    --mp:#4E9BB8;
+    --paper:#F7F2E6;
+    --paper-ink:#231F17;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-font-smoothing:antialiased;}
+  body{
+    margin:0;color:var(--text);font-family:'Inter',sans-serif;
+    background:
+      radial-gradient(circle at 14px 14px, rgba(255,255,255,0.03) 1px, transparent 1.4px) 0 0/28px 28px,
+      radial-gradient(900px 500px at 88% -6%, rgba(203,173,124,0.10) 0%, transparent 60%),
+      radial-gradient(900px 600px at 8% 106%, rgba(203,173,124,0.05) 0%, transparent 60%),
+      radial-gradient(1200px 700px at 15% -10%, #1A1610 0%, transparent 55%),
+      var(--bg);
+    min-height:100vh;
+  }
+  .eyebrow{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:700;letter-spacing:0.12em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+  .eyebrow::before{content:"";width:16px;height:1px;background:var(--accent);display:block;}
+  hr.rule{border:none;border-top:1px dashed var(--line);margin:18px 0;position:relative;}
+  hr.rule::after{content:"◆";position:absolute;left:0;top:-7px;font-size:9px;color:var(--muted);background:var(--surface);padding-right:8px;}
+  .ico{display:inline-flex;width:13px;height:13px;vertical-align:-2px;margin-right:5px;flex-shrink:0;}
+  .ico svg{width:100%;height:100%;display:block;}
+  .app{max-width:1120px;margin:0 auto;padding:22px 18px 64px;}
+  button{font-family:'Inter',sans-serif;}
+  input,select{font-family:'Inter',sans-serif;}
+  ::selection{background:var(--accent);color:var(--accent-ink);}
+  a{color:var(--accent);}
+
+  /* ---------- AUTH SCREEN ---------- */
+  .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .auth-shell{
+    display:grid;grid-template-columns:1fr 1fr;max-width:860px;width:100%;
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,0.65);
+    position:relative;
+  }
+  .auth-shell::before{
+    content:"";position:absolute;inset:0;pointer-events:none;border-radius:16px;
+    background:linear-gradient(90deg,var(--accent) 0%, transparent 40%);
+    opacity:0.55;height:2px;width:100%;top:0;
+  }
+  .auth-aside{
+    background:linear-gradient(165deg,#1C170F 0%,#0C0A07 100%);
+    padding:42px 36px;display:flex;flex-direction:column;justify-content:space-between;
+    border-right:1px solid var(--line);
+    position:relative;
+  }
+  .auth-aside::before, .auth-aside::after{
+    content:"";position:absolute;width:14px;height:14px;
+    border-color:rgba(203,173,124,0.55);border-style:solid;
+  }
+  .auth-aside::before{top:16px;left:16px;border-width:1px 0 0 1px;}
+  .auth-aside::after{bottom:16px;right:16px;border-width:0 1px 1px 0;}
+  .auth-mark{display:flex;align-items:center;gap:10px;}
+  .auth-mark .sq{width:30px;height:30px;border-radius:7px;background:var(--accent);color:var(--accent-ink);
+    display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-weight:700;font-size:15px;flex-shrink:0;}
+  .auth-mark .word{font-family:'Sora',sans-serif;font-weight:700;font-size:16.5px;letter-spacing:0.01em;}
+  .auth-headline{font-family:'Sora',sans-serif;font-weight:700;font-size:23px;line-height:1.3;margin:30px 0 22px;color:var(--text);}
+  .auth-features{list-style:none;margin:0;padding:0 0 0 2px;display:flex;flex-direction:column;gap:0;
+    border-left:1px solid var(--line-soft);}
+  .auth-features li{display:flex;gap:12px;font-size:12.5px;color:var(--text-dim);line-height:1.5;
+    padding:10px 0 10px 16px;position:relative;}
+  .auth-features li::before{
+    content:"";position:absolute;left:-1px;top:18px;width:9px;height:1px;background:var(--line-soft);
+  }
+  .auth-features li .tick{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--accent);font-weight:600;
+    flex-shrink:0;margin-top:1px;letter-spacing:0.02em;
+  }
+  .auth-foot{font-size:10.5px;color:var(--muted);line-height:1.6;margin-top:30px;padding-top:18px;border-top:1px solid var(--line-soft);}
+
+  .auth-card{padding:40px 38px;}
+  .auth-card-title{font-family:'Sora',sans-serif;font-weight:700;font-size:19px;margin-bottom:4px;}
+  .auth-sub{color:var(--muted);font-size:12.5px;margin-bottom:22px;line-height:1.5;}
+  .auth-tabs{display:flex;gap:4px;margin-bottom:22px;background:var(--surface-2);border-radius:8px;padding:3px;border:1px solid var(--line);}
+  .auth-tab{flex:1;text-align:center;padding:8px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:background .15s,color .15s;}
+  .auth-tab.active{background:var(--accent);color:var(--accent-ink);}
+  .auth-field{margin-bottom:14px;}
+  .auth-field label{display:block;font-size:11px;font-weight:600;color:var(--text-dim);margin-bottom:6px;letter-spacing:0.01em;}
+  .auth-field input, .auth-field select{
+    width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:7px;
+    padding:10px 12px;font-size:13.5px;transition:border-color .15s;
+  }
+  .auth-field input:focus, .auth-field select:focus{outline:none;border-color:var(--accent);}
+  .auth-btn{
+    width:100%;background:var(--accent);color:var(--accent-ink);border:none;border-radius:7px;padding:12px;
+    font-weight:700;font-size:13px;cursor:pointer;margin-top:8px;letter-spacing:0.01em;transition:background .15s;
+  }
+  .auth-btn:hover:not(:disabled){background:var(--accent-hover);}
+  .auth-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .auth-error{background:var(--danger-bg);color:#E0A292;border:1px solid rgba(190,108,88,0.35);border-radius:7px;padding:10px 12px;font-size:12px;margin-bottom:14px;}
+  .plan-pick{display:flex;gap:6px;}
+  .plan-pick label{
+    flex:1;border:1px solid var(--line);border-radius:7px;padding:9px 6px;text-align:center;font-size:11px;
+    cursor:pointer;color:var(--text-dim);transition:border-color .15s,background .15s;
+  }
+  .plan-pick input{width:auto;display:none;}
+  .plan-pick input:checked + span{color:var(--accent);font-weight:700;}
+  .plan-pick label:has(input:checked){border-color:var(--accent);background:rgba(203,173,124,0.08);}
+  @media(max-width:760px){ .auth-aside{display:none;} .auth-shell{grid-template-columns:1fr;max-width:400px;} .auth-card{padding:34px 26px;} }
+
+  /* ---------- TOPBAR ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+    padding-bottom:17px;margin-bottom:22px;border-bottom:1px solid var(--line);position:relative;
+  }
+  .topbar::after{content:"";position:absolute;left:0;bottom:-2px;width:64px;height:1px;background:var(--accent);}
+  .brand{font-family:'Sora',sans-serif;font-weight:700;font-size:16.5px;display:flex;align-items:center;gap:10px;}
+  .brand .sq{width:26px;height:26px;border-radius:6px;background:var(--accent);color:var(--accent-ink);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+  .tenant-info{display:flex;align-items:center;gap:12px;font-size:12.5px;color:var(--text-dim);}
+  .plan-badge{border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:0.02em;text-transform:uppercase;}
+  .btn-ghost{
+    background:transparent;border:1px solid var(--line);color:var(--text-dim);padding:7px 12px;border-radius:7px;
+    font-weight:600;font-size:11.5px;cursor:pointer;transition:border-color .15s,color .15s;
+  }
+  .btn-ghost:hover{border-color:var(--muted);color:var(--text);}
+
+  /* ---------- TABS ---------- */
+  .tabs{display:flex;gap:26px;margin-bottom:20px;border-bottom:1px solid var(--line);}
+  .tab{
+    padding:0 2px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);
+    border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s;
+  }
+  .tab.active{color:var(--text);border-bottom-color:var(--accent);}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  /* ---------- CAJA ---------- */
+  .caja-grid{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start;}
+  @media(max-width:760px){.caja-grid{grid-template-columns:1fr;}}
+  .scan-row{display:flex;gap:8px;margin-bottom:10px;}
+  .scan-row input{
+    flex:1;background:var(--surface);border:1px solid var(--line);color:var(--text);border-radius:8px;
+    padding:11px 13px;font-size:13.5px;
+  }
+  .scan-row input:focus{outline:none;border-color:var(--accent);}
+  .scan-hint{font-size:11px;color:var(--muted);margin:0 0 14px 2px;display:flex;align-items:center;}
+  .scan-hint.locked{color:var(--danger);}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:10px;}
+  .prod-btn{
+    background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:13px 12px;color:var(--text);
+    cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:7px;min-height:80px;transition:border-color .15s,transform .1s;
+  }
+  .prod-btn:hover:not(:disabled){border-color:var(--accent);transform:translateY(-1px);}
+  .prod-btn:disabled{opacity:0.35;cursor:not-allowed;}
+  .prod-name{font-family:'Sora',sans-serif;font-size:12.5px;font-weight:600;line-height:1.25;}
+  .prod-price{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--accent);}
+  .prod-stock{font-size:10px;color:var(--muted);}
+  .prod-stock.low{color:var(--danger);}
+
+  .ticket{background:var(--paper);color:var(--paper-ink);border-radius:10px;padding:18px 16px 16px;position:relative;font-size:12.5px;box-shadow:0 18px 40px -18px rgba(0,0,0,0.55);}
+  .ticket::before{content:"";position:absolute;top:-6px;left:0;right:0;height:12px;background:radial-gradient(circle 6px at 10px 0, transparent 6px, var(--paper) 6.5px) top left/20px 12px repeat-x;}
+  .ticket-barcode{height:26px;margin-top:12px;
+    background:repeating-linear-gradient(90deg,#221E17 0 2px, transparent 2px 4px, #221E17 4px 5px, transparent 5px 9px, #221E17 9px 12px, transparent 12px 15px);
+    opacity:0.8;}
+  .ticket-head{text-align:center;border-bottom:1px dashed #DCD0B7;padding-bottom:9px;margin-bottom:9px;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.01em;}
+  .ticket-sub{text-align:center;font-size:10px;color:#8F8570;margin-top:-5px;margin-bottom:9px;font-family:'IBM Plex Mono',monospace;}
+  .ticket-items{min-height:60px;max-height:240px;overflow-y:auto;}
+  .ticket-item{display:flex;justify-content:space-between;gap:4px;padding:5px 0;border-bottom:1px dotted #E5D9BE;font-size:12px;}
+  .ticket-item span:last-child{font-family:'IBM Plex Mono',monospace;}
+  .ticket-item .qty-ctrl{display:flex;align-items:center;gap:6px;}
+  .qty-ctrl button{width:17px;height:17px;border:1px solid #DCD0B7;background:var(--paper);border-radius:4px;font-size:10px;cursor:pointer;padding:0;color:var(--paper-ink);}
+  .ticket-empty{color:#8F8570;text-align:center;padding:22px 0;font-size:11px;}
+  .ticket-total{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed #DCD0B7;margin-top:9px;padding-top:10px;}
+  .ticket-total span:first-child{font-family:'Sora',sans-serif;font-weight:700;font-size:11px;letter-spacing:0.04em;color:#71675A;text-transform:uppercase;}
+  .ticket-total span:last-child{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:19px;}
+  .pay-buttons{display:flex;gap:8px;margin-top:12px;}
+  .btn-pay{flex:1;border:none;border-radius:7px;padding:11px 6px;font-weight:600;font-size:11.5px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;transition:opacity .15s;}
+  .btn-pay.efectivo{background:var(--paper-ink);color:#fff;}
+  .btn-pay.efectivo:hover:not(:disabled){opacity:0.85;}
+  .btn-pay.mp{background:var(--mp);color:#fff;}
+  .btn-pay.mp:hover:not(:disabled){opacity:0.85;}
+  .btn-pay:disabled{background:#E5D9BE !important;color:#9C9280 !important;cursor:not-allowed;}
+  .btn-pay .lock{position:absolute;top:-6px;right:-4px;font-size:12px;}
+
+  /* ---------- MODAL MP ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(8,12,22,0.82);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px;backdrop-filter:blur(2px);}
+  .modal-card{background:var(--paper);color:var(--paper-ink);border-radius:12px;padding:24px;max-width:320px;width:100%;text-align:center;box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);}
+  .modal-mp-brand{color:var(--mp);font-family:'Sora',sans-serif;font-weight:700;font-size:14px;margin-bottom:3px;}
+  .modal-amount{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:26px;margin:6px 0 16px;}
+  .qr-box{width:180px;height:180px;margin:0 auto 14px;border:1px solid #E5D9BE;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:8px;background:var(--paper);}
+  .modal-status{font-size:12px;color:#71675A;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:18px;}
+  .spinner{width:13px;height:13px;border:2px solid #E5D9BE;border-top-color:var(--mp);border-radius:50%;animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .modal-actions{display:flex;gap:8px;}
+  .modal-actions button{flex:1;border:none;border-radius:7px;padding:10px;font-weight:600;font-size:12px;cursor:pointer;transition:opacity .15s;}
+  .modal-actions button:hover{opacity:0.85;}
+  .btn-confirm-sim{background:var(--mp);color:#fff;}
+  .btn-cancel-sim{background:#EAE0CB;color:#4A4536;}
+  .modal-note{font-size:9.5px;color:#9C9280;margin-top:14px;line-height:1.55;}
+
+  /* ---------- PRODUCTOS ---------- */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:18px;position:relative;overflow:hidden;}
+  .panel::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent) 0%, transparent 55%);}
+  .form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .form-row input{background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:10px 11px;font-size:12.5px;flex:1;min-width:110px;}
+  .form-row input:focus{outline:none;border-color:var(--accent);}
+  .btn-accent{background:var(--accent);color:var(--accent-ink);border:none;border-radius:7px;padding:10px 18px;font-weight:700;font-size:12.5px;cursor:pointer;transition:background .15s;}
+  .btn-accent:hover{background:var(--accent-hover);}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{text-align:left;color:var(--muted);text-transform:uppercase;font-size:10px;font-weight:600;letter-spacing:0.04em;padding:8px;border-bottom:1px solid var(--line);}
+  td{padding:10px 8px;border-bottom:1px solid var(--line-soft);}
+  tr:hover td{background:rgba(255,255,255,0.015);}
+  .stock-badge{padding:2px 8px;border-radius:20px;font-size:10.5px;font-family:'IBM Plex Mono',monospace;background:rgba(203,173,124,0.14);color:var(--accent);}
+  .stock-badge.low{background:var(--danger-bg);color:var(--danger);}
+  .barcode-txt{font-size:11px;color:var(--text-dim);font-family:'IBM Plex Mono',monospace;}
+  .barcode-txt.none{opacity:0.4;font-style:italic;font-family:'Inter',sans-serif;}
+  .del-btn{background:none;border:none;color:var(--danger);cursor:pointer;font-size:14px;opacity:0.7;}
+  .del-btn:hover{opacity:1;}
+  .limit-warning{background:var(--danger-bg);color:#E0A292;border:1px solid rgba(190,108,88,0.35);border-radius:7px;padding:10px 12px;font-size:12px;margin-bottom:14px;display:flex;align-items:center;}
+
+  /* ---------- VENTAS ---------- */
+  .sale-card{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:9px;padding:13px 15px;margin-bottom:8px;}
+  .sale-card-head{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;}
+  .sale-card-head .tot{color:var(--accent);font-weight:600;font-family:'IBM Plex Mono',monospace;}
+  .sale-items{margin-top:7px;font-size:11px;color:var(--muted);}
+  .pay-badge{font-size:10px;padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:600;}
+  .pay-badge.efectivo{background:rgba(203,173,124,0.14);color:var(--accent);}
+  .pay-badge.mercadopago{background:rgba(78,155,184,0.16);color:#7FBBD3;}
+  .empty-state{text-align:center;color:var(--muted);padding:44px 10px;font-size:12.5px;}
+  .resumen-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+  .resumen-chip{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 16px;font-size:11.5px;color:var(--muted);
+    position:relative;}
+  .resumen-chip::after{content:"";position:absolute;top:9px;right:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:0.7;}
+  .resumen-chip b{color:var(--text);font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:16px;display:block;margin-top:3px;}
+
+  .loading-line{text-align:center;color:var(--muted);padding:32px 0;font-size:12.5px;}
+  .footnote{text-align:center;color:var(--muted);font-size:10.5px;margin-top:26px;line-height:1.6;}
+  .footnote b{color:var(--accent);}
+</style>
+
+<div id="authScreen" class="auth-wrap">
+  <div class="auth-shell">
+    <div class="auth-aside">
+      <div>
+        <div class="auth-mark"><span class="sq">K</span><span class="word">KIOSCO·POS</span></div>
+        <div class="auth-headline">El sistema de caja pensado para kioscos y almacenes argentinos.</div>
+        <ul class="auth-features">
+          <li><span class="tick">01</span>Caja táctil con lector de código de barras</li>
+          <li><span class="tick">02</span>Cobros en efectivo y Mercado Pago</li>
+          <li><span class="tick">03</span>Control de stock y alertas en tiempo real</li>
+          <li><span class="tick">04</span>Datos aislados por kiosco (multi-tenant seguro)</li>
+        </ul>
+      </div>
+      <div class="auth-foot">Tu información queda guardada en el servidor, separada del resto de las cuentas mediante seguridad a nivel de fila (RLS).</div>
+    </div>
+
+    <div class="auth-card">
+      <div class="eyebrow">Panel de acceso</div>
+      <div class="auth-card-title">Acceder a tu cuenta</div>
+      <div class="auth-sub">Conectado a tu cuenta real — los datos quedan guardados en el servidor.</div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-authtab="login">Ingresar</div>
+        <div class="auth-tab" data-authtab="registro">Nuevo kiosco</div>
+      </div>
+
+      <div id="authError" style="display:none" class="auth-error"></div>
+
+      <form id="loginForm">
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="loginEmail" required placeholder="dueno@kiosco.com" />
+        </div>
+        <div class="auth-field">
+          <label>Contraseña</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••" />
+        </div>
+        <button class="auth-btn" type="submit">Ingresar</button>
+      </form>
+
+      <form id="registroForm" style="display:none">
+        <div class="auth-field">
+          <label>Nombre del kiosco</label>
+          <input type="text" id="regNombre" required placeholder="Kiosco Don Ramón" />
+        </div>
+        <div class="auth-field">
+          <label>Email del dueño</label>
+          <input type="email" id="regEmail" required placeholder="dueno@kiosco.com" />
+        </div>
+        <div class="auth-field">
+          <label>Contraseña</label>
+          <input type="password" id="regPassword" required placeholder="Mínimo 6 caracteres" minlength="6" />
+        </div>
+        <div class="auth-field">
+          <label>Plan</label>
+          <div class="plan-pick">
+            <label><input type="radio" name="regPlan" value="basico" checked /><span>Básico</span></label>
+            <label><input type="radio" name="regPlan" value="estandar" /><span>Estándar</span></label>
+            <label><input type="radio" name="regPlan" value="premium" /><span>Premium</span></label>
+          </div>
+        </div>
+        <button class="auth-btn" type="submit">Crear kiosco</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="mainApp" class="app" style="display:none">
+  <div class="topbar">
+    <div class="brand"><span class="sq">K</span>KIOSCO·POS</div>
+    <div class="tenant-info">
+      <span id="tenantNameLabel"></span>
+      <span class="plan-badge" id="planBadge"></span>
+      <button class="btn-ghost" id="logoutBtn">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-view="caja">Caja</div>
+    <div class="tab" data-view="productos">Productos</div>
+    <div class="tab" data-view="ventas">Ventas</div>
+  </div>
+
+  <div class="view active" id="view-caja">
+    <div class="caja-grid">
+      <div>
+        <div class="scan-row">
+          <input id="scanInput" placeholder="Escanear código de barras o buscar por nombre..." autocomplete="off" />
+        </div>
+        <div class="scan-hint" id="scanHint"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg></span>Listo para escanear — el foco se mantiene solo.</div>
+        <div id="productsGrid" class="products-grid"><div class="loading-line">Cargando productos...</div></div>
+      </div>
+      <div class="ticket">
+        <div class="ticket-head" id="ticketTenantName">KIOSCO</div>
+        <div class="ticket-sub" id="ticketDate"></div>
+        <div class="ticket-items" id="ticketItems"></div>
+        <div class="ticket-total"><span>TOTAL</span><span id="ticketTotal">$0</span></div>
+        <div class="pay-buttons">
+          <button class="btn-pay efectivo" id="cobrarEfectivoBtn" disabled><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.4"/></svg></span>Efectivo</button>
+          <button class="btn-pay mp" id="cobrarMpBtn" disabled><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 17.5h2"/></svg></span>Mercado Pago</button>
+        </div>
+        <div class="ticket-barcode"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" id="view-productos">
+    <div class="eyebrow">Inventario</div>
+    <div class="panel">
+      <div id="limitWarning" style="display:none" class="limit-warning"></div>
+      <div class="form-row">
+        <input id="pNombre" placeholder="Nombre (ej: Alfajor Jorgito)" />
+        <input id="pCodigo" placeholder="Código de barras (opcional)" />
+        <input id="pPrecio" placeholder="Precio" type="number" min="0" />
+        <input id="pStock" placeholder="Stock inicial" type="number" min="0" />
+        <button class="btn-accent" id="addProdBtn">Agregar</button>
+      </div>
+      <table>
+        <thead><tr><th>Producto</th><th>Código</th><th>Precio</th><th>Stock</th><th></th></tr></thead>
+        <tbody id="prodTableBody"><tr><td colspan="5" class="loading-line">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="view" id="view-ventas">
+    <div class="eyebrow">Historial</div>
+    <div class="resumen-bar" id="resumenBar"></div>
+    <div id="ventasList"><div class="loading-line">Cargando ventas...</div></div>
+  </div>
+
+  <div id="mpModalRoot"></div>
+
+  <div class="footnote">
+    Los datos de tu kiosco están guardados en el servidor y aislados del resto de los kioscos (multi-tenant con RLS).
+  </div>
+</div>
+
+<script>
+(function(){
+  const API_BASE = 'https://backend-production-fc9a7.up.railway.app';
+
+  let session = null;     // { token, tenant_id, tenant_nombre, plan_id }
+  let plan = null;        // detalle del plan actual (funciones/límites)
+  let productos = [];
+  let cart = {};
+  let mpPollTimer = null;
+  let searchTerm = '';
+
+  const $ = (id) => document.getElementById(id);
+
+  const ICONS = {
+    ready: '<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg></span>',
+    lock: '<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>',
+    cash: '<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.4"/></svg></span>',
+    phone: '<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 17.5h2"/></svg></span>',
+    warn: '<span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 10.2v3.6"/><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/></svg></span>'
+  };
+
+  function loadSession(){
+    try{
+      const raw = localStorage.getItem('kiosco_session');
+      if(raw) session = JSON.parse(raw);
+    }catch(e){ session = null; }
+  }
+  function saveSession(){
+    localStorage.setItem('kiosco_session', JSON.stringify(session));
+  }
+  function clearSession(){
+    session = null;
+    localStorage.removeItem('kiosco_session');
+  }
+
+  async function api(path, options = {}){
+    const headers = Object.assign({'Content-Type': 'application/json'}, options.headers || {});
+    if(session && session.token) headers['Authorization'] = 'Bearer ' + session.token;
+    const res = await fetch(API_BASE + path, Object.assign({}, options, {headers}));
+    let data = null;
+    try{ data = await res.json(); }catch(e){ /* sin body */ }
+    if(!res.ok){
+      const err = new Error((data && data.detail) || ('Error ' + res.status));
+      err.status = res.status;
+      err.data = data;
+      throw err;
+    }
+    return data;
+  }
+
+  function money(n){ return '$' + Number(n).toLocaleString('es-AR'); }
+  function escapeHtml(str){ const d = document.createElement('div'); d.textContent = str; return d.innerHTML; }
+
+  // ---------------- AUTH ----------------
+  function showAuthError(msg){
+    const el = $('authError');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  function hideAuthError(){ $('authError').style.display = 'none'; }
+
+  function setupAuthTabs(){
+    document.querySelectorAll('.auth-tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        hideAuthError();
+        if(tab.dataset.authtab === 'login'){
+          $('loginForm').style.display = 'block';
+          $('registroForm').style.display = 'none';
+        } else {
+          $('loginForm').style.display = 'none';
+          $('registroForm').style.display = 'block';
+        }
+      };
+    });
+  }
+
+  function setupAuthForms(){
+    $('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAuthError();
+      const email = $('loginEmail').value.trim();
+      const password = $('loginPassword').value;
+      try{
+        const data = await api('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password })
+        });
+        session = Object.assign({}, data, { token: data.access_token });
+        saveSession();
+        await startApp();
+      }catch(err){
+        showAuthError(err.message || 'No se pudo iniciar sesión');
+      }
+    });
+
+    $('registroForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAuthError();
+      const nombre_kiosco = $('regNombre').value.trim();
+      const email_dueno = $('regEmail').value.trim();
+      const password = $('regPassword').value;
+      const plan_id = document.querySelector('input[name="regPlan"]:checked').value;
+      try{
+        const data = await api('/auth/registro', {
+          method: 'POST',
+          body: JSON.stringify({ nombre_kiosco, email_dueno, password, plan_id })
+        });
+        session = Object.assign({}, data, { token: data.access_token });
+        saveSession();
+        await startApp();
+      }catch(err){
+        showAuthError(err.message || 'No se pudo crear el kiosco');
+      }
+    });
+  }
+
+  function logout(){
+    clearSession();
+    plan = null; productos = []; cart = {};
+    $('mainApp').style.display = 'none';
+    $('authScreen').style.display = 'flex';
+    $('loginEmail').value = ''; $('loginPassword').value = '';
+  }
+
+  // ---------------- APP BOOT ----------------
+  async function startApp(){
+    $('authScreen').style.display = 'none';
+    $('mainApp').style.display = 'block';
+    $('tenantNameLabel').textContent = session.tenant_nombre;
+    $('ticketTenantName').textContent = session.tenant_nombre.toUpperCase();
+
+    try{
+      plan = await api('/planes/actual');
+    }catch(err){
+      if(err.status === 401){ logout(); return; }
+      plan = null;
+    }
+    renderPlanBadge();
+    applyPlanGating();
+
+    await Promise.all([loadProductos(), loadVentas()]);
+    focusScan();
+  }
+
+  function renderPlanBadge(){
+    if(!plan) return;
+    $('planBadge').textContent = plan.nombre;
+  }
+
+  function applyPlanGating(){
+    if(!plan) return;
+    const mpBtn = $('cobrarMpBtn');
+    if(!plan.permite_mercado_pago){
+      mpBtn.title = 'No disponible en tu plan — actualizá a Estándar o Premium';
+    } else {
+      mpBtn.title = '';
+    }
+    const scanInput = $('scanInput');
+    const hint = $('scanHint');
+    if(!plan.permite_codigo_barras){
+      scanInput.placeholder = 'Buscar producto por nombre...';
+      hint.innerHTML = ICONS.lock + 'El escaneo por código de barras es de plan Estándar o superior. Podés buscar por nombre.';
+      hint.classList.add('locked');
+    } else {
+      scanInput.placeholder = 'Escanear código de barras o buscar por nombre...';
+      hint.innerHTML = ICONS.ready + 'Listo para escanear — el foco se mantiene solo.';
+      hint.classList.remove('locked');
+    }
+  }
+
+  // ---------------- PRODUCTOS ----------------
+  async function loadProductos(){
+    try{
+      productos = await api('/productos');
+      renderProducts();
+    }catch(err){
+      if(err.status === 401){ logout(); return; }
+      $('productsGrid').innerHTML = '<div class="empty-state">No se pudieron cargar los productos.</div>';
+    }
+  }
+
+  function matchesSearch(p, term){
+    if(!term) return true;
+    const t = term.trim().toLowerCase();
+    return p.nombre.toLowerCase().includes(t) || (p.codigo_barras && p.codigo_barras.toLowerCase() === t);
+  }
+
+  function renderProducts(){
+    const grid = $('productsGrid');
+    grid.innerHTML = '';
+    const visible = productos.filter(p => matchesSearch(p, searchTerm));
+    if(productos.length === 0){
+      grid.innerHTML = '<div class="empty-state">Todavía no cargaste productos.<br/>Andá a la pestaña "Productos".</div>';
+    } else if(visible.length === 0){
+      grid.innerHTML = '<div class="empty-state">Ningún producto coincide con la búsqueda.</div>';
+    }
+    visible.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'prod-btn';
+      btn.disabled = p.stock <= 0;
+      btn.innerHTML = `
+        <span class="prod-name">${escapeHtml(p.nombre)}</span>
+        <span class="prod-price">${money(p.precio)}</span>
+        <span class="prod-stock ${p.stock <= 4 ? 'low' : ''}">${p.stock <= 0 ? 'sin stock' : 'stock: ' + p.stock}</span>
+      `;
+      btn.onclick = () => addToCart(p.id);
+      grid.appendChild(btn);
+    });
+
+    const body = $('prodTableBody');
+    body.innerHTML = '';
+    if(productos.length === 0){
+      body.innerHTML = '<tr><td colspan="5" class="empty-state">Sin productos todavía.</td></tr>';
+    }
+    productos.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(p.nombre)}</td>
+        <td><span class="barcode-txt ${p.codigo_barras ? '' : 'none'}">${p.codigo_barras ? escapeHtml(p.codigo_barras) : 'sin código'}</span></td>
+        <td>${money(p.precio)}</td>
+        <td><span class="stock-badge ${p.stock <= 4 ? 'low' : ''}">${p.stock}</span></td>
+        <td><button class="del-btn" data-id="${p.id}" title="Eliminar">✕</button></td>
+      `;
+      body.appendChild(tr);
+    });
+    body.querySelectorAll('.del-btn').forEach(b => {
+      b.onclick = async () => {
+        try{
+          await api('/productos/' + b.dataset.id, { method: 'DELETE' });
+          delete cart[b.dataset.id];
+          await loadProductos();
+          renderTicket();
+        }catch(err){
+          alert('No se pudo eliminar: ' + err.message);
+        }
+      };
+    });
+  }
+
+  // ---------------- CAJA / CARRITO ----------------
+  function focusScan(){
+    const el = $('scanInput');
+    if(el && $('view-caja').classList.contains('active')) el.focus();
+  }
+
+  function addToCart(productId){
+    const p = productos.find(x => x.id === productId);
+    if(!p || p.stock <= (cart[productId] || 0)) return;
+    cart[productId] = (cart[productId] || 0) + 1;
+    renderTicket();
+    renderProducts();
+    focusScan();
+  }
+
+  function changeQty(productId, delta){
+    const p = productos.find(x => x.id === productId);
+    let q = (cart[productId] || 0) + delta;
+    if(q <= 0){ delete cart[productId]; }
+    else if(p && q <= p.stock){ cart[productId] = q; }
+    renderTicket();
+    renderProducts();
+  }
+
+  function renderTicket(){
+    $('ticketDate').textContent = new Date().toLocaleString('es-AR');
+    const itemsWrap = $('ticketItems');
+    const ids = Object.keys(cart);
+    itemsWrap.innerHTML = '';
+    let total = 0;
+    if(ids.length === 0){
+      itemsWrap.innerHTML = '<div class="ticket-empty">Tocá un producto para agregarlo</div>';
+    }
+    ids.forEach(id => {
+      const p = productos.find(x => x.id === id);
+      if(!p) return;
+      const qty = cart[id];
+      const subtotal = p.precio * qty;
+      total += subtotal;
+      const row = document.createElement('div');
+      row.className = 'ticket-item';
+      row.innerHTML = `
+        <span>${escapeHtml(p.nombre)}</span>
+        <span class="qty-ctrl">
+          <button data-id="${id}" data-d="-1">−</button>
+          <span>${qty}</span>
+          <button data-id="${id}" data-d="1">+</button>
+        </span>
+        <span>${money(subtotal)}</span>
+      `;
+      itemsWrap.appendChild(row);
+    });
+    itemsWrap.querySelectorAll('button[data-d]').forEach(b => {
+      b.onclick = () => changeQty(b.dataset.id, parseInt(b.dataset.d, 10));
+    });
+    $('ticketTotal').textContent = money(total);
+    $('cobrarEfectivoBtn').disabled = ids.length === 0;
+    $('cobrarMpBtn').disabled = ids.length === 0 || (plan && !plan.permite_mercado_pago);
+  }
+
+  async function finalizeSale(paymentMethod){
+    const items = Object.keys(cart).map(id => ({ producto_id: id, cantidad: cart[id] }));
+    if(items.length === 0) return;
+    try{
+      await api('/ventas', {
+        method: 'POST',
+        body: JSON.stringify({ items, metodo_pago: paymentMethod })
+      });
+      cart = {};
+      await Promise.all([loadProductos(), loadVentas()]);
+      renderTicket();
+      focusScan();
+    }catch(err){
+      if(err.status === 402){
+        alert(err.message);
+      } else if(err.status === 409){
+        alert(err.message);
+        await loadProductos();
+      } else {
+        alert('No se pudo registrar la venta: ' + err.message);
+      }
+    }
+  }
+
+  function openMpModal(){
+    if(plan && !plan.permite_mercado_pago){
+      alert('Mercado Pago no está disponible en tu plan (' + plan.nombre + '). Actualizá de plan para usarlo.');
+      return;
+    }
+    const items = Object.keys(cart).map(id => ({ producto_id: id, cantidad: cart[id] }));
+    if(items.length === 0) return;
+    const total = Object.keys(cart).reduce((a, id) => {
+      const p = productos.find(x => x.id === id);
+      return a + p.precio * cart[id];
+    }, 0);
+
+    const root = $('mpModalRoot');
+    root.innerHTML = `
+      <div class="modal-overlay">
+        <div class="modal-card">
+          <div class="modal-mp-brand">${ICONS.phone}Mercado Pago</div>
+          <div class="modal-amount">${money(total)}</div>
+          <div class="modal-status"><span class="spinner"></span> Generando el link de pago...</div>
+          <div class="modal-actions">
+            <button class="btn-cancel-sim" id="mpCancelBtn">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    `;
+    $('mpCancelBtn').onclick = closeMpModal;
+
+    api('/mercadopago/crear-preferencia', {
+      method: 'POST',
+      body: JSON.stringify({ items })
+    }).then(pago => {
+      const card = root.querySelector('.modal-card');
+      if(!card) return; // se canceló mientras se generaba
+      const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pago.init_point);
+      card.innerHTML = `
+        <div class="modal-mp-brand">${ICONS.phone}Mercado Pago</div>
+        <div class="modal-amount">${money(total)}</div>
+        <div class="qr-box"><img src="${qrUrl}" alt="QR de pago" style="width:100%;height:100%;object-fit:contain" /></div>
+        <div class="modal-status"><span class="spinner"></span> Esperando confirmación del pago...</div>
+        <div class="modal-actions">
+          <button class="btn-cancel-sim" id="mpCancelBtn">Cancelar</button>
+          <button class="btn-confirm-sim" id="mpOpenLink">Abrir link de pago</button>
+        </div>
+        <div class="modal-note">Escaneá el QR con el celular o abrí el link para pagar en el ambiente de Mercado Pago. La venta se confirma sola apenas se acredita el pago.</div>
+      `;
+      $('mpCancelBtn').onclick = closeMpModal;
+      $('mpOpenLink').onclick = () => window.open(pago.init_point, '_blank');
+
+      mpPollTimer = setInterval(async () => {
+        try{
+          const estado = await api('/mercadopago/estado/' + pago.pago_id);
+          if(estado.estado === 'aprobado'){
+            clearInterval(mpPollTimer); mpPollTimer = null;
+            root.innerHTML = '';
+            cart = {};
+            await Promise.all([loadProductos(), loadVentas()]);
+            renderTicket();
+            focusScan();
+          } else if(estado.estado === 'rechazado' || estado.estado === 'cancelado'){
+            clearInterval(mpPollTimer); mpPollTimer = null;
+            const st = root.querySelector('.modal-status');
+            if(st) st.innerHTML = 'El pago no se pudo completar (' + estado.estado + ').';
+          }
+        }catch(err){
+          if(err.status === 401){ clearInterval(mpPollTimer); mpPollTimer = null; logout(); }
+        }
+      }, 3000);
+    }).catch(err => {
+      root.innerHTML = '';
+      if(err.status === 402){ alert(err.message); }
+      else if(err.status === 409){ alert(err.message); loadProductos(); }
+      else { alert('No se pudo generar el cobro con Mercado Pago: ' + err.message); }
+    });
+  }
+
+  function closeMpModal(){
+    if(mpPollTimer){ clearInterval(mpPollTimer); mpPollTimer = null; }
+    $('mpModalRoot').innerHTML = '';
+    focusScan();
+  }
+
+  // ---------------- VENTAS ----------------
+  async function loadVentas(){
+    try{
+      const [ventas, resumen] = await Promise.all([
+        api('/ventas'),
+        api('/ventas/resumen-hoy')
+      ]);
+      renderVentas(ventas, resumen);
+    }catch(err){
+      if(err.status === 401){ logout(); return; }
+      $('ventasList').innerHTML = '<div class="empty-state">No se pudieron cargar las ventas.</div>';
+    }
+  }
+
+  function renderVentas(ventas, resumen){
+    const bar = $('resumenBar');
+    if(resumen){
+      const efectivo = resumen.por_metodo_pago.efectivo || 0;
+      const mp = resumen.por_metodo_pago.mercadopago || 0;
+      bar.innerHTML = `
+        <div class="resumen-chip">Ventas hoy<b>${resumen.cantidad_ventas}</b></div>
+        <div class="resumen-chip">Total hoy<b>${money(resumen.total)}</b></div>
+        <div class="resumen-chip">${ICONS.cash}Efectivo<b>${money(efectivo)}</b></div>
+        <div class="resumen-chip">${ICONS.phone}Mercado Pago<b>${money(mp)}</b></div>
+      `;
+    }
+    const wrap = $('ventasList');
+    wrap.innerHTML = '';
+    if(!ventas || ventas.length === 0){
+      wrap.innerHTML = '<div class="empty-state">Todavía no hay ventas registradas.</div>';
+      return;
+    }
+    ventas.forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'sale-card';
+      const d = new Date(s.creado_en);
+      const pmLabel = s.metodo_pago === 'mercadopago' ? (ICONS.phone + 'Mercado Pago') : (ICONS.cash + 'Efectivo');
+      card.innerHTML = `
+        <div class="sale-card-head">
+          <span>${d.toLocaleString('es-AR')}<span class="pay-badge ${s.metodo_pago}">${pmLabel}</span></span>
+          <span class="tot">${money(s.total)}</span>
+        </div>
+        <div class="sale-items">${s.items.map(it => `${it.cantidad}× ${escapeHtml(it.nombre_producto)}`).join(' · ')}</div>
+      `;
+      wrap.appendChild(card);
+    });
+  }
+
+  // ---------------- TABS / UI GENERAL ----------------
+  function setupTabs(){
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        tab.classList.add('active');
+        $('view-' + tab.dataset.view).classList.add('active');
+        if(tab.dataset.view === 'caja') focusScan();
+        if(tab.dataset.view === 'ventas') loadVentas();
+      };
+    });
+  }
+
+  function setupScanFocus(){
+    $('view-caja').addEventListener('click', (e) => {
+      if(e.target.id === 'scanInput') return;
+      setTimeout(focusScan, 0);
+    });
+    window.addEventListener('focus', focusScan);
+  }
+
+  function setupForms(){
+    $('addProdBtn').onclick = async () => {
+      const nombre = $('pNombre').value.trim();
+      const codigo_barras = $('pCodigo').value.trim() || null;
+      const precio = parseFloat($('pPrecio').value);
+      const stock = parseInt($('pStock').value, 10);
+      if(!nombre || isNaN(precio) || isNaN(stock)) return;
+      $('limitWarning').style.display = 'none';
+      try{
+        await api('/productos', {
+          method: 'POST',
+          body: JSON.stringify({ nombre, codigo_barras, precio, stock })
+        });
+        $('pNombre').value = ''; $('pCodigo').value = ''; $('pPrecio').value = ''; $('pStock').value = '';
+        await loadProductos();
+      }catch(err){
+        if(err.status === 402){
+          const w = $('limitWarning');
+          w.innerHTML = ICONS.warn + escapeHtml(err.message);
+          w.style.display = 'block';
+        } else {
+          alert('No se pudo agregar el producto: ' + err.message);
+        }
+      }
+    };
+
+    $('cobrarEfectivoBtn').onclick = () => finalizeSale('efectivo');
+    $('cobrarMpBtn').onclick = openMpModal;
+
+    $('scanInput').oninput = (e) => { searchTerm = e.target.value; renderProducts(); };
+    $('scanInput').addEventListener('keydown', (e) => {
+      if(e.key !== 'Enter') return;
+      const term = e.target.value.trim().toLowerCase();
+      if(!term) return;
+      const exact = productos.find(p => p.codigo_barras && p.codigo_barras.toLowerCase() === term);
+      if(exact){
+        addToCart(exact.id);
+        e.target.value = '';
+        searchTerm = '';
+        renderProducts();
+      }
+    });
+
+    $('logoutBtn').onclick = () => {
+      if(confirm('¿Cerrar sesión?')) logout();
+    };
+  }
+
+  async function init(){
+    setupAuthTabs();
+    setupAuthForms();
+    setupTabs();
+    setupForms();
+    setupScanFocus();
+
+    loadSession();
+    if(session && session.token){
+      await startApp();
+    }
+  }
+
+  init();
+})();
+</script>
